@@ -1,43 +1,87 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { userLogged } from "../App";
 
 const Register = () => {
+  const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
+  const { setUser } = useContext(userLogged);
+  const navigate = useNavigate();
+  const handlePassword = (e) => {
+    if (password === e.target.value) {
+      setError("");
+      handleChange(e);
+    } else {
+      setError("Password didn't match, please try again.");
+    }
+  };
+  const [formData, setFormData] = useState({});
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch("http://localhost:5000/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        //TODO
+        console.log(data);
+        setUser({
+          name: formData.name,
+          email: formData.email,
+          active: true,
+        });
+        navigate("/");
+      });
+  };
   return (
     <>
       <div className="form-container">
         <h2>Register</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <input
             type="text"
             name="name"
             placeholder="Name"
-            //   value={formData.name}
-            //   onChange={handleChange}
+            onBlur={handleChange}
             required
           />
           <input
             type="email"
             name="email"
             placeholder="Email"
-            //   value={formData.email}
-            //   onChange={handleChange}
+            onBlur={handleChange}
             required
           />
           <input
             type="password"
             name="password"
             placeholder="Password"
-            //   value={formData.password}
-            //   onChange={handleChange}
+            onBlur={(e) => setPassword(e.target.value)}
             required
           />
           <input
             type="password"
-            name="confirmPassword"
+            name="password"
             placeholder="Confirm Password"
-            //   value={formData.confirmPassword}
-            //   onChange={handleChange}
+            onChange={handlePassword}
             required
           />
+          {error ? (
+            <p style={{ color: "red", alignItems: "center" }}>{error}</p>
+          ) : (
+            ""
+          )}
           <button type="submit">Register</button>
         </form>
         <br />

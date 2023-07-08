@@ -60,8 +60,7 @@ const Navbar = () => {
         </Typography>
         <InterestsIcon sx={{ display: { xs: "block", sm: "none" } }} />
         <Search>
-          {" "}
-          <InputBase placeholder="Search..."></InputBase>{" "}
+          <InputBase placeholder="Search..."></InputBase>
         </Search>
         <Icons>
           <Badge badgeContent={4} color="error">

@@ -16,6 +16,7 @@ function App() {
     email: "",
     active: false,
   });
+  console.log(user);
 
   const homePage = user.active ? (
     <Box>
