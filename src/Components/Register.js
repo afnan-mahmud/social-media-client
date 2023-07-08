@@ -34,14 +34,16 @@ const Register = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        //TODO
-        console.log(data);
-        setUser({
-          name: formData.name,
-          email: formData.email,
-          active: true,
-        });
-        navigate("/");
+        if (data.message) {
+          setUser({
+            name: formData.name,
+            email: formData.email,
+            active: true,
+          });
+          navigate("/");
+        } else {
+          setError(data.errors);
+        }
       });
   };
   return (
