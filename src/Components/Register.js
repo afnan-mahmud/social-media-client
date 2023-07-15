@@ -35,11 +35,16 @@ const Register = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.message) {
-          setUser({
+          const userCredential = {
             name: formData.name,
             email: formData.email,
             active: true,
-          });
+          };
+          setUser(userCredential);
+          localStorage.setItem(
+            "login_activity",
+            JSON.stringify(userCredential)
+          );
           navigate("/");
         } else {
           setError(data.errors);

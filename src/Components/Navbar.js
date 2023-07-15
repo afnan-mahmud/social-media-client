@@ -13,7 +13,9 @@ import {
   styled,
 } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { userLogged } from "../App";
+import { useNavigate } from "react-router-dom";
 
 const StyledToolBar = styled(Toolbar)({
   display: "flex",
@@ -52,6 +54,13 @@ const UserBox = styled(Box)(({ theme }) => ({
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useContext(userLogged);
+  const firstName = user.name.split(" ")[0];
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    localStorage.removeItem("login_activity");
+    navigate("/");
+  };
   return (
     <AppBar position="sticky">
       <StyledToolBar>
@@ -73,14 +82,14 @@ const Navbar = () => {
             onClick={() => setOpen(true)}
             sx={{ bgcolor: deepOrange[500], width: 30, height: 30 }}
           >
-            N
+            {firstName.charAt(0)}
           </Avatar>
         </Icons>
         <UserBox onClick={() => setOpen(true)}>
           <Avatar sx={{ bgcolor: deepOrange[500], width: 30, height: 30 }}>
-            N
+            {firstName.charAt(0)}
           </Avatar>
-          <Typography variant="span">Jhon</Typography>
+          <Typography variant="span">{firstName}</Typography>
         </UserBox>
       </StyledToolBar>
       <Menu
@@ -99,7 +108,7 @@ const Navbar = () => {
       >
         <MenuItem>Profile</MenuItem>
         <MenuItem>My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={handleLogOut}>Logout</MenuItem>
       </Menu>
     </AppBar>
   );

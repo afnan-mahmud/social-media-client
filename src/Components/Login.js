@@ -33,11 +33,16 @@ const Login = () => {
           setError(data.errors);
         } else if (data.data) {
           const userData = data.data.info;
-          setUser({
+          const userCredential = {
             active: true,
             name: userData.name,
             email: userData.email,
-          });
+          };
+          setUser(userCredential);
+          localStorage.setItem(
+            "login_activity",
+            JSON.stringify(userCredential)
+          );
         }
       });
   };

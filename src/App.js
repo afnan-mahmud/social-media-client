@@ -1,38 +1,25 @@
-import { Box, Stack } from "@mui/material";
 import React, { createContext, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import Feed from "./Components/Feed";
 import Login from "./Components/Login";
-import Navbar from "./Components/Navbar";
 import Register from "./Components/Register";
-import Rightbar from "./Components/Rightbar";
-import Sidebar from "./Components/Sidebar";
 import "./app.css";
+import Home from "./Components/Home";
+import AuthRoute from "./Components/AuthRoute";
 
 export const userLogged = createContext();
 function App() {
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    active: false,
-  });
+  const userInfo = localStorage.getItem("login_activity");
+  const parsedUserInfo = JSON.parse(userInfo);
+  const [user, setUser] = useState(parsedUserInfo);
 
-  const homePage = user.active ? (
-    <Box>
-      <Navbar />
-      <Stack direction="row" spacing={2} justifyContent="space-between">
-        <Sidebar />
-        <Feed />
-        <Rightbar />
-      </Stack>
-    </Box>
-  ) : (
-    <Login />
-  );
+  const homePage = parsedUserInfo.active ? <Home /> : <Login />;
+  const isAuthenticated = parsedUserInfo.active ? <Login /> : false;
   return (
     <userLogged.Provider value={{ user, setUser }}>
       <Routes>
-        <Route path="/" element={homePage} />
+        <AuthRoute path="/" isAuthenticated={isAuthenticated} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/register" element={<Register />} />
       </Routes>
     </userLogged.Provider>
